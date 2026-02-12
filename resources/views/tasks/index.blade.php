@@ -2,131 +2,123 @@
 
 @section('content')
 
-<!-- Titre de la page -->
-<h1 class="text-4xl font-bold text-gray-800 mb-6 mt-10 text-center">Tâches Créées</h1>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="display-5 fw-bold mb-2">
+        <i class="bi bi-folder me-2"></i>Tâches Créées
+    </h1>
+    <p class="lead mb-0">Gérez les tâches que vous avez créées</p>
+</div>
 
-<!-- Message de succès -->
+<!-- Alert Messages -->
 @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
 
-<!-- Vérification si la liste des tâches est vide -->
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
+<!-- Action Buttons -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ route('tasks.create') }}" class="btn btn-gradient btn-lg">
+        <i class="bi bi-plus-circle me-2"></i>Nouvelle Tâche
+    </a>
+    <span class="badge bg-secondary fs-6">{{ $teTasks->total() }} tâche(s)</span>
+</div>
+
 @if($teTasks->isEmpty())
-    <p class="text-center">Aucune tâche créée pour le moment.</p>
+    <!-- Empty State -->
+    <div class="card card-custom">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+            <h4 class="text-muted">Aucune tâche créée</h4>
+            <p class="text-muted mb-4">Commencez par créer votre première tâche</p>
+            <a href="{{ route('tasks.create') }}" class="btn btn-gradient">
+                <i class="bi bi-plus-circle me-2"></i>Créer une tâche
+            </a>
+        </div>
+    </div>
 @else
-    <div class="container mx-auto mt-10">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-lg text-center text-gray-700 bg-white">
-                <thead class="text-md text-white uppercase bg-gray-800">
+    <!-- Tasks Table -->
+    <div class="card card-custom">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
                     <tr>
-                        <!-- En-têtes de la table -->
-                        <th scope="col" class="px-6 py-4">Nom</th>
-                        <th scope="col" class="px-6 py-4">Statut</th>
-                        <th scope="col" class="px-6 py-4">Contenu</th>
-                        <th scope="col" class="px-6 py-4">Priorité</th>
-                        <th scope="col" class="px-6 py-4">Action</th>
+                        <th scope="col" class="ps-4">Titre</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Priorité</th>
+                        <th scope="col">Assigné à</th>
+                        <th scope="col">Échéance</th>
+                        <th scope="col" class="text-end pe-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Boucle pour afficher chaque tâche -->
                     @foreach ($teTasks as $teTask)
-                        <tr class="bg-gray-100 border-b">
-                            <!-- Nom de la tâche -->
-                            <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap">
-                                {{ $teTask->tetitle }}
-                            </th>
-                            <!-- Statut de la tâche avec badge de couleur -->
-                            <td class="px-6 py-4">
-                                <span class="badge badge-status-{{ $teTask->testatus }}">{{ ucfirst($teTask->testatus) }}</span>
-                            </td>
-                            <!-- Description de la tâche -->
-                            <td class="px-6 py-4">{{ $teTask->tedescription }}</td>
-                            <!-- Priorité de la tâche avec badge de couleur -->
-                            <td class="px-6 py-4">
-                                <span class="badge badge-{{ $teTask->tepriority }}">{{ ucfirst($teTask->tepriority) }}</span>
-                            </td>
-                            <!-- Actions disponibles pour chaque tâche -->
-                            <td class="px-6 py-4">
-                                <a href="{{ route('tasks.remove', ['teTask' => $teTask->id]) }}" class="btn btn-danger btn-sm">Supprimer</a>
-                                <a href="{{ route('tasks.edit', ['teTask' => $teTask->id]) }}" class="btn btn-info btn-sm">Editer</a>
-                                <a href="{{ route('tasks.show', ['teTask' => $teTask->id]) }}" class="btn btn-warning btn-sm">Voir</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold">{{ $teTask->tetitle }}</div>
+                            <small class="text-muted">{{ Str::limit($teTask->tedescription, 50) }}</small>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ $teTask->testatus }}">
+                                @if($teTask->testatus == 'a_faire')
+                                    <i class="bi bi-circle me-1"></i>À faire
+                                @elseif($teTask->testatus == 'en_cours')
+                                    <i class="bi bi-arrow-repeat me-1"></i>En cours
+                                @else
+                                    <i class="bi bi-check-circle me-1"></i>Terminé
+                                @endif
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ $teTask->tepriority }}">
+                                {{ ucfirst($teTask->tepriority) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                    <i class="bi bi-person-fill text-primary small"></i>
+                                </div>
+                                {{ $teTask->assignedUser->name ?? 'Non assigné' }}
+                            </div>
+                        </td>
+                        <td>
+                            <i class="bi bi-calendar3 me-1 text-muted"></i>
+                            {{ \Carbon\Carbon::parse($teTask->tedue_date)->format('d/m/Y') }}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ route('tasks.show', ['teTask' => $teTask->id]) }}" class="btn btn-outline-info" title="Voir">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ route('tasks.edit', ['teTask' => $teTask->id]) }}" class="btn btn-outline-primary" title="Modifier">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{{ route('tasks.remove', ['teTask' => $teTask->id]) }}" class="btn btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+    </div>
 
-        <!-- Pagination -->
-        <div class="mt-6 text-center">
-            {{ $teTasks->links() }}
-        </div>
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+        {{ $teTasks->links('pagination::bootstrap-5') }}
     </div>
 @endif
 
-<br>
-<!-- Bouton pour revenir à la page précédente -->
-<a href="{{ url()->previous() }}" class="font-medium bg-blue-500 px-6 py-3 text-white rounded-md hover:bg-blue-700">Retour</a>
-
 @endsection
-
-<style>
-/* Media queries pour la responsivité */
-@media (max-width: 1024px) {
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    th, td {
-        padding: 8px 12px;
-    }
-}
-@media (max-width: 768px) {
-    th, td {
-        padding: 6px 8px;
-    }
-}
-@media (max-width: 480px) {
-    th, td {
-        padding: 4px 6px;
-    }
-}
-
-/* Styles supplémentaires pour améliorer l'apparence */
-.table {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.table th, .table td {
-    vertical-align: middle;
-}
-.table th {
-    background-color: #f8f9fa;
-}
-
-/* Styles pour les priorités */
-.badge-haute {
-    background-color: #e3342f; /* Rouge */
-}
-.badge-moyenne {
-    background-color: #ffed4a; /* Orange */
-}
-.badge-faible {
-    background-color: #38c172; /* Vert */
-}
-
-/* Styles pour les statuts */
-.badge-status-termine {
-    background-color: #38c172; /* Vert */
-}
-.badge-status-a_faire {
-    background-color: #e3342f; /* Rouge */
-}
-.badge-status-en_cours {
-    background-color: #ffed4a; /* Orange */
-}
-</style>

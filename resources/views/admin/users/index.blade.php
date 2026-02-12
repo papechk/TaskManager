@@ -2,97 +2,95 @@
 
 @section('content')
 
-<!-- Affichage d'un message de succès si présent dans la session -->
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="display-5 fw-bold mb-2">
+        <i class="bi bi-people me-2"></i>Gestion des Utilisateurs
+    </h1>
+    <p class="lead mb-0">Administrez les comptes utilisateurs</p>
+</div>
+
+<!-- Alert Messages -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
 
-<!-- Titre de la page -->
-<div class="flex justify-center mt-10">
-    <h1 class="text-6xl font-bold text-black-500 mb-6">Liste des utilisateurs</h1>
+<!-- Action Buttons -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ route('admin.users.create') }}" class="btn btn-gradient btn-lg">
+        <i class="bi bi-person-plus me-2"></i>Nouvel Utilisateur
+    </a>
+    <span class="badge bg-secondary fs-6">{{ $teUsers->total() }} utilisateur(s)</span>
 </div>
 
-<div class="container mx-auto mt-10">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-lg text-center text-gray-700 bg-white">
-            <thead class="text-md text-white uppercase bg-gray-800">
+<!-- Users Table -->
+<div class="card card-custom">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
                 <tr>
-                    <!-- En-têtes de la table -->
-                    <th scope="col" class="px-6 py-4">Nom</th>
-                    <th scope="col" class="px-6 py-4">Email</th>
-                    <th scope="col" class="px-6 py-4">Rôle</th>
-                    <th scope="col" class="px-6 py-4">Action</th>
+                    <th scope="col" class="ps-4">Utilisateur</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Rôles</th>
+                    <th scope="col" class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Boucle pour afficher chaque utilisateur -->
                 @foreach ($teUsers as $teItems)
-                    <tr class="bg-gray-100 border-b">
-                        <!-- Nom de l'utilisateur -->
-                        <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap">
-                            {{ $teItems->name }}
-                        </th>
-                        <!-- Email de l'utilisateur -->
-                        <td class="px-6 py-4">
-                            {{ $teItems->email }}
-                        </td>
-                        <!-- Rôles de l'utilisateur -->
-                        <td class="px-6 py-4">
-                            @foreach ($teItems->roles as $teRole)
-                                {{ $teRole->name }}@if (!$loop->last), @endif
-                            @endforeach
-                        </td>
-                        <!-- Actions disponibles pour chaque utilisateur -->
-                        <td class="px-6 py-4">
+                <tr>
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                <i class="bi bi-person-fill fs-4 text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">{{ $teItems->name }}</div>
+                                <small class="text-muted">ID: {{ $teItems->id }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <i class="bi bi-envelope me-1 text-muted"></i>
+                        {{ $teItems->email }}
+                    </td>
+                    <td>
+                        @foreach ($teItems->roles as $teRole)
+                            @if($teRole->name == 'admin')
+                                <span class="badge bg-danger">{{ ucfirst($teRole->name) }}</span>
+                            @elseif($teRole->name == 'manager')
+                                <span class="badge bg-warning text-dark">{{ ucfirst($teRole->name) }}</span>
+                            @else
+                                <span class="badge bg-secondary">{{ ucfirst($teRole->name) }}</span>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ route('admin.users.edit', ['user' => $teItems->id]) }}" class="btn btn-outline-primary" title="Modifier">
+                                <i class="bi bi-pencil"></i>
+                            </a>
                             <form action="{{ route('admin.users.destroy', ['user' => $teItems->id]) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                                <button type="submit" class="btn btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </form>
-                            <a href="{{ route('admin.users.edit', ['user' => $teItems->id]) }}" class="btn btn-primary">Modifier</a>
-                        </td> 
-                    </tr>
+                        </div>
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-
-    <!-- Pagination -->
-    <div class="mt-6 text-center">
-        {{ $teUsers->links() }}
-    </div>
 </div>
 
-<br>
-<!-- Boutons de navigation -->
-<div class="flex justify-center space-x-4">
-    <a href="{{ url('/') }}" class="font-medium bg-blue-500 px-6 py-3 text-white rounded-md hover:bg-blue-700">Retour</a>
+<!-- Pagination -->
+<div class="d-flex justify-content-center mt-4">
+    {{ $teUsers->links('pagination::bootstrap-5') }}
 </div>
-
-<style> 
-    /* Media queries pour la responsivité */
-    @media (max-width: 1024px) {
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        th, td {
-            padding: 8px 12px;
-        }
-    }
-    @media (max-width: 768px) {
-        th, td {
-            padding: 6px 8px;
-        }
-    }
-    @media (max-width: 480px) {
-        th, td {
-            padding: 4px 6px;
-        }
-    }
-</style>
 
 @endsection

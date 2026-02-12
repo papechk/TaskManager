@@ -25,7 +25,7 @@ class TaskController extends Controller
                          ->orderBy('created_at', 'desc')
                          ->orderBy('tetitle', 'asc')
                          ->paginate(10);
-            return view('tasks.index', ['teTasks' => $teTasks]);
+            return view('tasks.liste', ['teTasks' => $teTasks]);
         } else {
             return redirect()->route('tasks.index')->with('error', 'Utilisateur non trouvé');
         }
@@ -37,13 +37,11 @@ class TaskController extends Controller
     public function MyTask()
     {
         $teUser = Auth::user();
-        $teTasks = Task::where(function($teQuery) use ($teUser) {
-                         $teQuery->where('teuser_created_by', $teUser->id)
-                               ->orWhere('teuser_assigned_to', $teUser->id);
-                     })
-                     ->where('teuser_assigned_to', '=', $teUser->id)
+        $teTasks = Task::where('teuser_assigned_to', $teUser->id)
+                     ->orderByRaw("FIELD(tepriority, 'haute', 'moyenne', 'faible')")
+                     ->orderBy('tedue_date', 'asc')
                      ->get();
-        return view('tasks.TaskAssigned', ['teTasks' => $teTasks]);
+        return view('tasks.mes-taches', ['teTasks' => $teTasks]);
     }
 
     /**
@@ -52,7 +50,7 @@ class TaskController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('tasks.create', compact('users'));
+        return view('tasks.nouveau', compact('users'));
     }
 
     /**
@@ -97,7 +95,7 @@ class TaskController extends Controller
     public function edit(Task $teTask)
     {
         $users = User::all();
-        return view('tasks.edit', ['teTask' => $teTask, 'users' => $users]);
+        return view('tasks.modifier', ['teTask' => $teTask, 'users' => $users]);
     }
 
     /**
@@ -150,7 +148,7 @@ class TaskController extends Controller
     public function show($id)
     {
         $task = Task::findOrFail($id);
-        return view('tasks.show', compact('task'));
+        return view('tasks.detail', compact('task'));
     }
 
     /**
@@ -167,5 +165,33 @@ class TaskController extends Controller
         ]);
 
         return redirect()->route('tasks.MyTask')->with('success', 'Statut de la tâche mis à jour avec succès');
+    }
+
+    /**
+     * Affiche le formulaire d'assignation d'une tâche.
+     */
+    public function assignView(Task $teTask)
+    {
+        $users = User::all();
+        return view('tasks.assigned-view', ['teTask' => $teTask, 'users' => $users]);
+    }
+
+    /**
+     * Assigne une tâche à un utilisateur.
+     */
+    public function assign(Request $request, Task $teTask)
+    {
+        $request->validate([
+            'teuser_assigned_to' => 'required|exists:users,id',
+        ]);
+
+        $teTask->update([
+            'teuser_assigned_to' => $request->teuser_assigned_to,
+        ]);
+
+        // Dispatch the job to send the email
+        SendTaskAssignedEmail::dispatch($teTask);
+
+        return redirect()->route('tasks.index')->with('success', 'Tâche assignée avec succès');
     }
 }

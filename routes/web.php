@@ -4,13 +4,21 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\TaskController;
+use App\Models\Task;
+use App\Models\User;
 
 Route::get('/', function () {
-    return view('home');
-})->middleware('auth');
+    $totalTasks = Task::count();
+    $tasksInProgress = Task::where('testatus', 'en_cours')->count();
+    $tasksCompleted = Task::where('testatus', 'termine')->count();
+    $totalUsers = User::count();
+    $myTasks = Task::where('teuser_assigned_to', auth()->id())->orderBy('tedue_date', 'asc')->take(5)->get();
+
+    return view('admin.dashboard', compact('totalTasks', 'tasksInProgress', 'tasksCompleted', 'totalUsers', 'myTasks'));
+})->middleware('auth')->name('home');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('admin')
@@ -23,12 +31,13 @@ Route::prefix('admin')
     Route::post('/users', 'store')->name('store');
     Route::get('/users/edit/{user}', 'edit')->name('edit');
     Route::post('/users/edit/{user}', 'update')->name('update');
-    Route::delete('/users/delete/{user}', 'destroy')->name('destroy'); 
+    Route::delete('/users/delete/{user}', 'destroy')->name('destroy');
 });
 
 Route::prefix('task')
 ->controller(TaskController::class)
 ->name('tasks.')
+->middleware('auth')
 ->group(function(){
     Route::get('/', 'index')->name('index');
     Route::get('/assigned', 'MyTask')->name('MyTask');
@@ -37,13 +46,13 @@ Route::prefix('task')
     Route::get('/edit/{teTask}', 'edit')->name('edit')->middleware('can:tecanCreateTask');
     Route::post('/edit/{teTask}', 'update')->name('update')->middleware('can:tecanCreateTask');
     Route::get('/delete/{teTask}', 'remove')->name('remove')->middleware('can:tecanCreateTask');
-    
+
     Route::get('/assign/{teTask}', 'assignView')->name('assignView');
     Route::post('/assign/{teTask}', 'assign')->name('assign');
-    
+
     Route::get('/{teTask}', 'show')->name('show');
     Route::post('/update-status/{teTask}', 'updateStatus')->name('updateStatus');
-}); 
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

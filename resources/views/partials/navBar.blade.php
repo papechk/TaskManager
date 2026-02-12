@@ -1,106 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        @media (max-width: 768px) {
-            .dropdown-menu {
-                right: 0;
-                left: auto;
-            }
-        }
-        .custom-dropdown:hover .dropdown-menu {
-            display: block;
-        }
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
-        .user-menu .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            z-index: 1;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        .user-menu:hover .dropdown-menu {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .user-menu a {
-            display: flex;
-            align-items: center;
-        }
-        .user-menu img {
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        .user-menu .dropdown-menu a:hover {
-            background-color: #f1f1f1;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <div class="container-fluid p-4 bg-white shadow-sm">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="font-bold text-lg">
-                <h1 class="text-2xl font-extrabold text-blue-600 cursor-pointer" onclick="window.location.href='/'">Task Manager</h1>
-            </div>
-            <ul class="d-flex align-items-center mb-3 md:mb-0 list-unstyled">
-                <li class="position-relative pr-5">
-                  
-                    <div class="dropdown-menu dropdown-menu-right w-full max-w-sm bg-white divide-y divide-gray-100 rounded-lg shadow-xl dark:bg-gray-800 dark:divide-gray-700 z-20 overflow-y-scroll">
-                        <div class="block px-4 py-2 font-medium text-center text-gray-700 rounded-t-lg bg-gray-50 dark:bg-gray-800 dark:text-white">Notifications</div>
-                        <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                            <a href="#" class="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <div class="w-full pl-3">
-                                    <div class="text-gray-500 text-sm mb-1.5 dark:text-gray-400">
-                                        <span class="font-semibold text-gray-900 dark:text-white">Leslie Livingston</span>
-                                        mentioned you in a comment: <span class="font-medium text-blue-500" href="#">@bonnie.green</span> what do you say?
-                                    </div>
-                                    <div class="text-xs text-blue-600 dark:text-blue-500">1 hour ago</div>
-                                </div>
-                            </a>
-                        </div>
-                        <a href="#" class="block py-2 text-sm font-medium text-center text-gray-900 rounded-b-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white">
-                            <div class="inline-flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
-                                    <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-                                </svg>
-                                View all
-                            </div>
-                        </a>
-                    </div>
-                </li>
-                <li class="user-menu md:mr-5 py-2 md:py-0">
-                    <a href="#" class="text-gray-900 dark:text-white">
-                        {{ Auth::user()->name }}
-                        <img src="path/to/profile/image.jpg" alt="User Avatar" class="w-8 h-8">
+<!-- Navigation Bar Bootstrap 5 -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+            <i class="bi bi-check2-square fs-3 me-2"></i>
+            <span class="fw-bold fs-4">Task Manager</span>
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">
+                        <i class="bi bi-house-door me-1"></i> Accueil
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right w-full max-w-xs bg-white divide-y divide-gray-100 rounded-lg shadow-xl dark:bg-gray-800 dark:divide-gray-700 z-20 mt-2">
-                        <form action="{{ route('logout') }}" method="post">
-                            @csrf
-                            <button class="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" type="submit">Se déconnecter</button>
-                        </form>
-                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tasks.MyTask') ? 'active' : '' }}" href="{{ route('tasks.MyTask') }}">
+                        <i class="bi bi-list-task me-1"></i> Mes Tâches
+                    </a>
+                </li>
+                @can('tecanCreateTask')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="{{ route('tasks.index') }}">
+                        <i class="bi bi-folder me-1"></i> Tâches Créées
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tasks.create') ? 'active' : '' }}" href="{{ route('tasks.create') }}">
+                        <i class="bi bi-plus-circle me-1"></i> Nouvelle Tâche
+                    </a>
+                </li>
+                @endcan
+                @can('admin')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                        <i class="bi bi-people me-1"></i> Utilisateurs
+                    </a>
+                </li>
+                @endcan
+            </ul>
+
+            <!-- User Menu -->
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                            <i class="bi bi-person-fill text-primary"></i>
+                        </div>
+                        <span>{{ Auth::user()->name }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="min-width: 200px;">
+                        <li class="px-3 py-2 border-bottom">
+                            <small class="text-muted">Connecté en tant que</small>
+                            <p class="mb-0 fw-bold">{{ Auth::user()->email }}</p>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-gear me-2"></i> Mon Profil
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item py-2 text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
     </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+</nav>

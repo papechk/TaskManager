@@ -43,8 +43,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    } 
-    
+    }
+
     /**
      * Relation many-to-many avec le modèle Role.
      */
@@ -62,6 +62,17 @@ class User extends Authenticatable
     public function manyRoles(array $teroles)
     {
         return $this->roles()->whereIn('name', $teroles)->exists();
+    }
+
+    /**
+     * Vérifie si l'utilisateur a un rôle spécifique.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole(string $role)
+    {
+        return $this->roles()->where('name', $role)->exists();
     }
 
     /**

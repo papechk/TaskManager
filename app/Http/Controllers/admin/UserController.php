@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\User;
-use App\Models\role;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +15,15 @@ class UserController extends Controller
     public function index()
     {
         $teUsers = User::paginate(10); // Paginer les utilisateurs, 10 par page
-        return view('admin.users.index', compact('teUsers'));
+        $roles = Role::all();
+        return view('admin.users.liste', compact('teUsers', 'roles'));
+    }
+
+    // Affiche le formulaire de création d'un utilisateur
+    public function create()
+    {
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
     }
 
     // Enregistre un nouvel utilisateur
@@ -28,12 +36,12 @@ class UserController extends Controller
             'roles' => 'required|array',
             'roles.*' => 'exists:roles,id'
         ]);
-    
+
         $user = User::create($request->all());
         $user->roles()->sync($request->input('roles'));
-    
+
         session()->flash('success', 'Compte utilisateur créé avec succès');
-    
+
         return redirect()->route('admin.users.index');
     }
 
@@ -41,7 +49,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $user->load('roles');
-        $roles = role::all();
+        $roles = Role::all();
         return view('admin.users.edit', [
             'user' => $user,
             'roles' => $roles

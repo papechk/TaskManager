@@ -23,20 +23,20 @@
         <!-- Sidebar -->
         <aside
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="absolute left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-hidden bg-white dark:bg-boxdark duration-300 ease-linear lg:static lg:translate-x-0 border-r border-stroke dark:border-strokedark"
+            class="absolute left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-hidden bg-boxdark duration-300 ease-linear lg:static lg:translate-x-0"
             @click.away="sidebarOpen = false"
         >
             <!-- Sidebar Header -->
-            <div class="flex items-center justify-between gap-2 px-6 py-5 lg:py-6">
+            <div class="flex items-center justify-between gap-2 px-6 py-5 lg:py-6 border-b border-strokedark">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
                     <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500">
                         <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
                     </span>
-                    <span class="text-xl font-bold text-gray-900 dark:text-white">TaskManager</span>
+                    <span class="text-xl font-bold text-white">TaskManager</span>
                 </a>
-                <button @click="sidebarOpen = false" class="block lg:hidden text-gray-500">
+                <button @click="sidebarOpen = false" class="block lg:hidden text-gray-400 hover:text-white">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -46,10 +46,10 @@
             <!-- Sidebar Menu -->
             <nav class="flex flex-col overflow-y-auto px-4 py-4">
                 <div>
-                    <h3 class="mb-4 ml-4 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">Menu</h3>
+                    <h3 class="mb-4 ml-4 text-xs font-semibold uppercase text-sidebar-menu">Menu</h3>
                     <ul class="mb-6 flex flex-col gap-1">
                         <li>
-                            <a href="{{ route('home') }}" class="sidebar-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                            <a href="{{ route('home') }}" class="group flex items-center gap-2.5 rounded-md px-4 py-2 font-medium text-sidebar-menu hover:bg-white/10 hover:text-white {{ request()->routeIs('home') ? 'bg-white/10 text-white' : '' }}">
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                 </svg>
@@ -57,7 +57,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('tasks.index') }}" class="sidebar-link {{ request()->routeIs('tasks.index') ? 'active' : '' }}">
+                            <a href="{{ route('tasks.index') }}" class="group flex items-center gap-2.5 rounded-md px-4 py-2 font-medium text-sidebar-menu hover:bg-white/10 hover:text-white {{ request()->routeIs('tasks.index') ? 'bg-white/10 text-white' : '' }}">
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                 </svg>
@@ -65,7 +65,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('tasks.MyTask') }}" class="sidebar-link {{ request()->routeIs('tasks.MyTask') ? 'active' : '' }}">
+                            <a href="{{ route('tasks.MyTask') }}" class="group flex items-center gap-2.5 rounded-md px-4 py-2 font-medium text-sidebar-menu hover:bg-white/10 hover:text-white {{ request()->routeIs('tasks.MyTask') ? 'bg-white/10 text-white' : '' }}">
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
@@ -73,7 +73,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('tasks.create') }}" class="sidebar-link {{ request()->routeIs('tasks.create') ? 'active' : '' }}">
+                            <a href="{{ route('tasks.create') }}" class="group flex items-center gap-2.5 rounded-md px-4 py-2 font-medium text-sidebar-menu hover:bg-white/10 hover:text-white {{ request()->routeIs('tasks.create') ? 'bg-white/10 text-white' : '' }}">
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>
@@ -85,10 +85,10 @@
 
                 @if(Auth::user()->hasRole('admin'))
                 <div>
-                    <h3 class="mb-4 ml-4 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">Administration</h3>
+                    <h3 class="mb-4 ml-4 text-xs font-semibold uppercase text-sidebar-menu">Administration</h3>
                     <ul class="mb-6 flex flex-col gap-1">
                         <li>
-                            <a href="{{ route('admin.users.index') }}" class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.users.index') }}" class="group flex items-center gap-2.5 rounded-md px-4 py-2 font-medium text-sidebar-menu hover:bg-white/10 hover:text-white {{ request()->routeIs('admin.users.*') ? 'bg-white/10 text-white' : '' }}">
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                                 </svg>

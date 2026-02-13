@@ -10,13 +10,13 @@
 
 @layer components {
     .sidebar-link {
-        @apply flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-gray-600 duration-300 ease-in-out hover:bg-primary-100 dark:text-gray-300 dark:hover:bg-boxdark;
+        @apply flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-sidebar-menu duration-300 ease-in-out hover:bg-white/10 hover:text-white;
     }
     .sidebar-link.active {
-        @apply bg-primary-500 text-white dark:bg-primary-600;
+        @apply bg-white/10 text-white;
     }
     .card {
-        @apply rounded-lg border border-stroke bg-white shadow-card dark:border-strokedark dark:bg-boxdark;
+        @apply rounded-lg border border-stroke bg-white p-6 shadow-card dark:border-strokedark dark:bg-boxdark;
     }
     .btn-primary {
         @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary-500 px-5 py-2.5 text-center font-medium text-white hover:bg-primary-600 transition-colors;

@@ -21,7 +21,7 @@ class TaskController extends Controller
 
         if ($teUser) {
             $teTasks = Task::where('teuser_created_by', $teUserId) // Récupérer les tâches créées par l'utilisateur connecté
-                         ->orderByRaw("FIELD(tepriority, 'haute', 'moyenne', 'faible')")
+                         ->orderByRaw("CASE WHEN tepriority='haute' THEN 1 WHEN tepriority='moyenne' THEN 2 WHEN tepriority='faible' THEN 3 END")
                          ->orderBy('created_at', 'desc')
                          ->orderBy('tetitle', 'asc')
                          ->paginate(10);
@@ -38,7 +38,7 @@ class TaskController extends Controller
     {
         $teUser = Auth::user();
         $teTasks = Task::where('teuser_assigned_to', $teUser->id)
-                     ->orderByRaw("FIELD(tepriority, 'haute', 'moyenne', 'faible')")
+                     ->orderByRaw("CASE WHEN tepriority='haute' THEN 1 WHEN tepriority='moyenne' THEN 2 WHEN tepriority='faible' THEN 3 END")
                      ->orderBy('tedue_date', 'asc')
                      ->get();
         return view('tasks.mes-taches', ['teTasks' => $teTasks]);

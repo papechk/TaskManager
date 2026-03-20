@@ -23,7 +23,7 @@ return new class extends Migration
             $teTable->time('testart_time');
             $teTable->time('teend_time');
             $teTable->string('testatus')->default('à faire');
-            $teTable->enum('tepriority', ['haute', 'moyenne', 'faible'])->default('moyenne');
+            $teTable->string('tepriority', 20)->default('moyenne');
             $teTable->foreignId('teuser_created_by')->constrained('users')->cascadeOnDelete();
             $teTable->foreignId('teuser_assigned_to')->nullable()->constrained('users')->cascadeOnDelete();
             $teTable->timestamps();

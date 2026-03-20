@@ -10,7 +10,7 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_URL
-        value: https://taskmanager.onrender.com
+        value: https://taskmanager-uvp6.onrender.com
       - key: DB_CONNECTION
         value: sqlite
       - key: SESSION_DRIVER

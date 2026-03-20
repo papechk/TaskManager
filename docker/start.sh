@@ -11,14 +11,8 @@ chown www-data:www-data /var/www/html/database/database.sqlite
 cd /var/www/html
 
 for i in 1 2 3; do
-    php artisan migrate --force && break
-    echo "Migration attempt $i failed, retrying..."
-    sleep 3
-done
-
-for i in 1 2 3; do
-    php artisan db:seed --force && break
-    echo "Seed attempt $i failed, retrying..."
+    php artisan migrate:fresh --seed --force && break
+    echo "Migrate attempt $i failed, retrying..."
     sleep 3
 done
 

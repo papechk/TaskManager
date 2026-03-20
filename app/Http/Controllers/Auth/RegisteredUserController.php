@@ -43,7 +43,9 @@ class RegisteredUserController extends Controller
         ]);
 
         $role = Role::where('name', 'users')->first();
-        $user->roles()->attach($role->id);
+        if ($role) {
+            $user->roles()->attach($role->id);
+        }
 
         event(new Registered($user));
 

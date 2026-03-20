@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: taskmanager
+    runtime: docker
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_NAME
+        value: TaskManager
+      - key: APP_ENV
+        value: production
+      - key: APP_URL
+        value: https://taskmanager.onrender.com
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync

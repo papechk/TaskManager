@@ -14,25 +14,25 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Supprimer les utilisateurs existants
-        User::where('email', 'admin@gmail.com')->delete();
-        User::where('email', 'manager@gmail.com')->delete();
-        User::where('email', 'user@gmail.com')->delete();
+        User::where('email', 'admin@example.com')->delete();
+        User::where('email', 'manager@example.com')->delete();
+        User::where('email', 'user@example.com')->delete();
 
         $teAdmin = User::create([
             'name' => 'admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@example.com',
             'password' => Hash::make('password'),
         ]);
 
         $teManager = User::create([
             'name' => 'manager',
-            'email' => 'manager@gmail.com',
+            'email' => 'manager@example.com',
             'password' => Hash::make('password'),
         ]);
 
         $teUser = User::create([
             'name' => 'user',
-            'email' => 'user@gmail.com',
+            'email' => 'user@example.com',
             'password' => Hash::make('password'),
         ]);
 

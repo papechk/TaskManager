@@ -14,13 +14,13 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        value: aws-0-ca-central-1.pooler.supabase.com
+        value: db.npfuctogigxiivvqtuhs.supabase.co
       - key: DB_PORT
         value: "5432"
       - key: DB_DATABASE
         value: postgres
       - key: DB_USERNAME
-        value: postgres.npfuctogigxiivvqtuhs
+        value: postgres
       - key: DB_PASSWORD
         value: Alimatou15.
       - key: DB_SSLMODE
@@ -30,6 +30,6 @@ services:
       - key: SESSION_DRIVER
         value: cookie
       - key: CACHE_DRIVER
-        value: database
+        value: file
       - key: QUEUE_CONNECTION
         value: sync

@@ -12,10 +12,24 @@ services:
       - key: APP_URL
         value: https://taskmanager-uvp6.onrender.com
       - key: DB_CONNECTION
-        value: sqlite
+        value: pgsql
+      - key: DB_HOST
+        value: aws-0-ca-central-1.pooler.supabase.com
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        value: postgres.npfuctogigxiivvqtuhs
+      - key: DB_PASSWORD
+        value: Alimatou15.
+      - key: DB_SSLMODE
+        value: require
+      - key: DB_SCHEMA
+        value: taskmanager
       - key: SESSION_DRIVER
-        value: file
+        value: cookie
       - key: CACHE_DRIVER
-        value: file
+        value: database
       - key: QUEUE_CONNECTION
         value: sync

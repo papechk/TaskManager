@@ -5,17 +5,10 @@ PORT="${PORT:-80}"
 sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
 sed -i "s/:80/:$PORT/" /etc/apache2/sites-available/000-default.conf
 
-touch /var/www/html/database/database.sqlite
-chown www-data:www-data /var/www/html/database/database.sqlite
-
 cd /var/www/html
 
-for i in 1 2 3; do
-    php artisan migrate:fresh --seed --force && break
-    echo "Migrate attempt $i failed, retrying..."
-    sleep 3
-done
+php artisan migrate --force || echo "Migration skipped (tables may already exist)"
 
-chown -R www-data:www-data storage bootstrap/cache database
+chown -R www-data:www-data storage bootstrap/cache
 
 exec apache2-foreground
